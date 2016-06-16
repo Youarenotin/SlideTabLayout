@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -21,9 +22,10 @@ public class SlideTabLayout extends HorizontalScrollView{
     private static final int TITLE_OFFSET_DIPS = 75;
     private static final int TAB_VIEW_PADDING_DIPS = 36;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
-    private SlideTabStrip mTabStrip;
+    private final SlideTabStrip mTabStrip;
     private ViewPager mViewPager;
     private boolean mDistributeEvenly = true;
+    private int mTitleOffset;
 
     public SlideTabLayout(Context context) {
         this(context,null);
@@ -40,7 +42,7 @@ public class SlideTabLayout extends HorizontalScrollView{
         setHorizontalScrollBarEnabled(false);
 
         //得到select section 距离左边像素距离
-        int mTitleOffset = (int) (TITLE_OFFSET_DIPS*(getResources().getDisplayMetrics().density));
+        mTitleOffset = (int) (TITLE_OFFSET_DIPS*(getResources().getDisplayMetrics().density));
         setFillViewport(true);
         mTabStrip = new SlideTabStrip(context);
         addView(mTabStrip, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -71,10 +73,10 @@ public class SlideTabLayout extends HorizontalScrollView{
             int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
             textView.setPadding(padding,0,padding,0);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
-            TypedValue value = new TypedValue();
-            getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground,value,true);
-            textView.setBackgroundResource(value.resourceId);
-
+//            TypedValue value = new TypedValue();
+//            getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground,value,true);
+            textView.setTextColor(getResources().getColorStateList(R.color.selector_tab_text_color));
+            if (i==0) textView.setSelected(true);
             mTabStrip.addView(textView);
         }
     }
@@ -83,7 +85,7 @@ public class SlideTabLayout extends HorizontalScrollView{
         this.mDistributeEvenly = b;
     }
 
-    public static class InternalOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    public  class InternalOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -93,11 +95,26 @@ public class SlideTabLayout extends HorizontalScrollView{
         @Override
         public void onPageSelected(int position) {
 
+            scrollToTab(position,0);
+            for (int i = 0 ; i <mTabStrip.getChildCount();i++){
+                ((TextView)mTabStrip.getChildAt(i)).setSelected(position==i);
+            }
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
 
+        }
+    }
+
+    private void scrollToTab(int position, int posionOffset) {
+        View view = mTabStrip.getChildAt(position);
+        if (view!=null){
+            int transX = view.getLeft() + posionOffset;
+            if (position>0 || posionOffset>0){
+                transX-=mTitleOffset;
+            }
+            scrollTo(transX,0);
         }
     }
 }
