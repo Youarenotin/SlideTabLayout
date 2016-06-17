@@ -26,6 +26,7 @@ public class SlideTabLayout extends HorizontalScrollView{
     private ViewPager mViewPager;
     private boolean mDistributeEvenly = true;
     private int mTitleOffset;
+    private int mode=1;
 
     public SlideTabLayout(Context context) {
         this(context,null);
@@ -57,8 +58,45 @@ public class SlideTabLayout extends HorizontalScrollView{
         }
     }
 
+    public void  setMode(int m){
+        if (m==1){
+            invalidateTabStrip();
+        }
+        else if(m==2){
+            invalidateTabStripBeta();
+        }
+    }
+
+    private void invalidateTabStripBeta() {
+        mTabStrip.removeAllViews();
+           this.mode=2;
+        this.setBackgroundResource(android.R.color.holo_green_light);
+        PagerAdapter adapter = mViewPager.getAdapter();
+        for (int i = 0 ; i < adapter.getCount() ; i++){
+            TextView textView = new TextView(getContext());
+            textView.setText(adapter.getPageTitle(i));
+            if (mDistributeEvenly){
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (20*(getResources().getDisplayMetrics().density)));
+                textView.setLayoutParams(lp);
+            }
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+            textView.setGravity(Gravity.CENTER);
+            textView.setAllCaps(true);
+            int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
+            textView.setPadding(padding,0,padding,0);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
+            textView.setTextColor(getResources().getColorStateList(R.color.selector_tab_text_color1));
+            if (i==0) {
+                textView.setSelected(true);
+            }
+            mTabStrip.addView(textView);
+        }
+    }
 
     private void invalidateTabStrip() {
+        mTabStrip.removeAllViews();
+        this.mode=1;
+        this.setBackgroundResource(android.R.color.white);
         PagerAdapter adapter = mViewPager.getAdapter();
         for (int i = 0 ; i < adapter.getCount() ; i++){
             TextView textView = new TextView(getContext());
@@ -92,20 +130,31 @@ public class SlideTabLayout extends HorizontalScrollView{
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            if (mode==1){
 
+            }
+            else{
+                mTabStrip.onPageScrolled(position,positionOffset,positionOffsetPixels);
+
+            }
         }
 
         @Override
         public void onPageSelected(int position) {
 
-            scrollToTab(position,0);
-            for (int i = 0 ; i <mTabStrip.getChildCount();i++){
-                ((TextView)mTabStrip.getChildAt(i)).setSelected(position==i);
+            if (mode==1) {
+                scrollToTab(position,0);
+                for (int i = 0 ; i <mTabStrip.getChildCount();i++){
+                    ((TextView)mTabStrip.getChildAt(i)).setSelected(position==i);
+                }
+                for (int i = 0 ; i<mTabStrip.getChildCount();i++){
+                    ((TextView)mTabStrip.getChildAt(i)).setBackgroundResource(R.drawable.bg_tabview_normal);
+                }
+                ((TextView)mTabStrip.getChildAt(position)).setBackgroundResource(R.drawable.bg_tabview_selected);
             }
-            for (int i = 0 ; i<mTabStrip.getChildCount();i++){
-                ((TextView)mTabStrip.getChildAt(i)).setBackgroundResource(R.drawable.bg_tabview_normal);
+            else{
+
             }
-            ((TextView)mTabStrip.getChildAt(position)).setBackgroundResource(R.drawable.bg_tabview_selected);
         }
 
         @Override

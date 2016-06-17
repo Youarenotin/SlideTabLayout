@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tabviewbgcolor">#666666</color>
+    <color name="toolbarcolor">#4F99D4</color>
 </resources>
