@@ -60,9 +60,10 @@ public class SlideTabLayout extends HorizontalScrollView{
 
     public void  setMode(int m){
         if (m==1){
+            this.setPadding(getPaddingLeft(),getPaddingTop(),getPaddingRight(), (int) (5*getResources().getDisplayMetrics().density));
             invalidateTabStrip();
-        }
-        else if(m==2){
+        } else if (m == 2) {
+            this.setPadding(getPaddingLeft(),getPaddingTop(),getPaddingRight(), (int) (2*getResources().getDisplayMetrics().density));
             invalidateTabStripBeta();
         }
     }
