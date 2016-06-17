@@ -134,8 +134,9 @@ public class SlideTabLayout extends HorizontalScrollView{
 
             }
             else{
+                View view = mTabStrip.getChildAt(position);
+                scrollToTab(position, (int) (positionOffset*view.getWidth()));
                 mTabStrip.onPageScrolled(position,positionOffset,positionOffsetPixels);
-
             }
         }
 
@@ -153,6 +154,10 @@ public class SlideTabLayout extends HorizontalScrollView{
                 ((TextView)mTabStrip.getChildAt(position)).setBackgroundResource(R.drawable.bg_tabview_selected);
             }
             else{
+//                scrollToTab(position,0);
+                for (int i = 0 ; i <mTabStrip.getChildCount();i++){
+                    ((TextView)mTabStrip.getChildAt(i)).setSelected(position==i);
+                }
 
             }
         }
