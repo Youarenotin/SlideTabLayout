@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -16,6 +17,7 @@ public class SlideTabStrip extends LinearLayout {
     private final Paint mSelectedIndicatorPaint;
     private int mSelectedPosition;
     private float mSelectedOffset;
+    private float acceleration = 0.5f;
 
     public SlideTabStrip(Context context) {
         this(context,null);
@@ -69,17 +71,28 @@ public class SlideTabStrip extends LinearLayout {
             View view = getChildAt(mSelectedPosition);
             int left = view .getLeft();
             int right = view .getRight();
-            if (mSelectedOffset>=0&&mSelectedOffset<0.2){
-                canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
-            }
-            View nextView  =getChildAt(mSelectedPosition+1);
+            View nextView  =getChildAt(mSelectedPosition + 1);
             if(nextView == null){
                 return ;
             }
-            if (mSelectedOffset>0.2){
-                right= (int) (right+(mSelectedOffset)*nextView.getWidth());
-                canvas.drawRect(left,height-((int)2*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+
+            if (mSelectedOffset<0.3){
+                canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
             }
+            float footX = 0f;
+            if (mSelectedOffset>0.3&&mSelectedOffset<0.7){
+                float temp = (float) ((mSelectedOffset-0.3)/(0.4));
+                 footX = (float) ((Math.atan(temp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
+                right= (int) (right+(footX)*nextView.getWidth());
+            }
+            if (mSelectedOffset>0.7){
+                float temp = (float) ((mSelectedOffset-0.7)/(0.3));
+                footX = (float) ((Math.atan(temp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
+                right=right+nextView.getWidth();
+                left=(int)(left+(footX)*view.getWidth());
+            }
+            Log.d("offset", " "+footX);
+            canvas.drawRect(left,height-((int)2*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
         }
 
     }
