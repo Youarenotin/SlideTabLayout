@@ -41,27 +41,45 @@ public class SlideTabStrip extends LinearLayout {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
+//        int height = getHeight();
+//        int childCount = getChildCount();
+//        if (childCount>0){
+//            View view = getChildAt(mSelectedPosition);
+//            int left = view.getLeft();
+//            int right = view.getRight();
+//
+//                View nextTitle = getChildAt(mSelectedPosition + 1);
+//
+//            if (nextTitle==null){
+//                canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+//                return ;
+//            }
+//                left = (int) (mSelectedOffset * nextTitle.getLeft() +
+//                        (1.0f - mSelectedOffset) * left);
+//                right = (int) (mSelectedOffset * nextTitle.getRight() +
+//                        (1.0f - mSelectedOffset) * right);
+//
+//                mSelectedIndicatorPaint.setColor(Color.WHITE);
+//                canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+//        }
         int height = getHeight();
-        int childCount = getChildCount();
+        int childCount =getChildCount();
+        mSelectedIndicatorPaint.setColor(Color.WHITE);
         if (childCount>0){
             View view = getChildAt(mSelectedPosition);
-            int left = view.getLeft();
-            int right = view.getRight();
-
-                View nextTitle = getChildAt(mSelectedPosition + 1);
-
-            if (nextTitle==null){
+            int left = view .getLeft();
+            int right = view .getRight();
+            if (mSelectedOffset>=0&&mSelectedOffset<0.2){
                 canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+            }
+            View nextView  =getChildAt(mSelectedPosition+1);
+            if(nextView == null){
                 return ;
             }
-                left = (int) (mSelectedOffset * nextTitle.getLeft() +
-                        (1.0f - mSelectedOffset) * left);
-                right = (int) (mSelectedOffset * nextTitle.getRight() +
-                        (1.0f - mSelectedOffset) * right);
-
-                mSelectedIndicatorPaint.setColor(Color.WHITE);
-                canvas.drawRect(left,height-((int)3*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+            if (mSelectedOffset>0.2){
+                right= (int) (right+(mSelectedOffset)*nextView.getWidth());
+                canvas.drawRect(left,height-((int)2*getResources().getDisplayMetrics().density),right,height,mSelectedIndicatorPaint);
+            }
         }
 
     }

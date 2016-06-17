@@ -13,4 +13,10 @@
         app:showAsAction="never"
         >
     </item>
+    <item
+        android:title="推酷"
+        android:id="@+id/menu_select_tuiku"
+        app:showAsAction="never"
+        >
+    </item>
 </menu>

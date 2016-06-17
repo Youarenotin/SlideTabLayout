@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity  implements GuideFragment.On
                 Toast.makeText(getApplicationContext(),"huya",Toast.LENGTH_SHORT).show();
                 tab.setMode(1);
                 break;
+            case R.id.menu_select_tuiku:
+                Toast.makeText(getApplicationContext(),"tuiku",Toast.LENGTH_SHORT).show();
+                tab.setMode(3);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
