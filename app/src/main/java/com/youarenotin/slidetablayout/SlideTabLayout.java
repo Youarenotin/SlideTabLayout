@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class SlideTabLayout extends HorizontalScrollView{
 
     private static final int TITLE_OFFSET_DIPS = 75;
-    private static final int TAB_VIEW_PADDING_DIPS = 36;
+    private static final int TAB_VIEW_PADDING_DIPS = 15;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
     private final SlideTabStrip mTabStrip;
     private ViewPager mViewPager;
@@ -64,7 +64,7 @@ public class SlideTabLayout extends HorizontalScrollView{
             TextView textView = new TextView(getContext());
             textView.setText(adapter.getPageTitle(i));
             if (mDistributeEvenly){
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (48*(getResources().getDisplayMetrics().density)));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (20*(getResources().getDisplayMetrics().density)));
                 textView.setLayoutParams(lp);
             }
             textView.setTypeface(Typeface.DEFAULT_BOLD);
@@ -76,7 +76,10 @@ public class SlideTabLayout extends HorizontalScrollView{
 //            TypedValue value = new TypedValue();
 //            getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground,value,true);
             textView.setTextColor(getResources().getColorStateList(R.color.selector_tab_text_color));
-            if (i==0) textView.setSelected(true);
+            if (i==0) {
+                textView.setSelected(true);
+                textView.setBackgroundResource(R.drawable.bg_tabview_selected);
+            }
             mTabStrip.addView(textView);
         }
     }
@@ -99,6 +102,10 @@ public class SlideTabLayout extends HorizontalScrollView{
             for (int i = 0 ; i <mTabStrip.getChildCount();i++){
                 ((TextView)mTabStrip.getChildAt(i)).setSelected(position==i);
             }
+            for (int i = 0 ; i<mTabStrip.getChildCount();i++){
+                ((TextView)mTabStrip.getChildAt(i)).setBackgroundResource(R.drawable.bg_tabview_normal);
+            }
+            ((TextView)mTabStrip.getChildAt(position)).setBackgroundResource(R.drawable.bg_tabview_selected);
         }
 
         @Override
